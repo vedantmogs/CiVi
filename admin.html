@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Civi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --brand-900: #1e3a8a;
+            --brand-800: #1e40af;
+            --brand-700: #1d4ed8;
+            --brand-600: #2563eb;
+            --brand-500: #3b82f6;
+            --brand-200: #bfdbfe;
+            --brand-50: #eff6ff;
+            --accent-500: #eab308;
+            --accent-400: #fbbf24;
+            --accent-50: #fef3c7;
+            --bg-gray: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-medium: #64748b;
+            --text-light: #94a3b8;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            --green-400: #4ade80;
+            --red-50: #fef2f2;
+            --red-100: #fee2e2;
+            --red-600: #dc2626;
+            --red-700: #b91c1c;
+            --red-500: #ef4444;
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            background: var(--brand-900);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-400);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--brand-900);
+            font-size: 18px;
+        }
+
+        .logo-text {
+            color: var(--white);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-name {
+            color: var(--white);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .badge-admin {
+            background: var(--accent-400);
+            color: var(--brand-900);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-400) 0%, var(--accent-500) 100%);
+            border: 2px solid var(--accent-400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-900);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Main Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 256px;
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--brand-900);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-version {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .nav-btn:hover {
+            background: var(--gray-50);
+        }
+
+        .nav-btn.active {
+            background: var(--brand-50);
+            color: var(--brand-700);
+        }
+
+        .nav-btn-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-badge {
+            background: var(--red-100);
+            color: var(--red-600);
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--gray-100);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.blue {
+            background: var(--brand-50);
+            color: var(--brand-600);
+        }
+
+        .stat-icon.yellow {
+            background: var(--accent-50);
+            color: var(--accent-500);
+        }
+
+        .stat-icon.green {
+            background: var(--green-50);
+            color: var(--green-600);
+        }
+
+        .stat-icon.red {
+            background: var(--red-50);
+            color: var(--red-600);
+        }
+
+        .stat-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .stat-badge.green {
+            background: var(--green-50);
+            color: var(--green-600);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 16px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* Verification Table */
+        .table-container {
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .verification-table {
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .verification-table thead {
+            background: var(--gray-50);
+            color: var(--gray-500);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .verification-table th {
+            padding: 12px 24px;
+            font-weight: 600;
+        }
+
+        .verification-table tbody tr {
+            border-bottom: 1px solid var(--gray-50);
+            transition: background 0.2s ease;
+        }
+
+        .verification-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .verification-table td {
+            padding: 16px 24px;
+        }
+
+        .contractor-name {
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .contractor-id {
+            font-size: 12px;
+            color: var(--gray-400);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .doc-badges {
+            display: flex;
+            gap: 8px;
+        }
+
+        .doc-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            border: 1px solid;
+        }
+
+        .doc-badge.verified {
+            background: var(--green-50);
+            color: var(--green-700);
+            border-color: var(--green-100);
+        }
+
+        .doc-badge.missing {
+            background: var(--red-50);
+            color: var(--red-700);
+            border-color: var(--red-100);
+        }
+
+        .approve-btn {
+            background: var(--brand-900);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+        }
+
+        .approve-btn:hover {
+            background: var(--brand-800);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.2);
+        }
+
+        .empty-state {
+            padding: 48px;
+            text-align: center;
+            color: var(--gray-400);
+        }
+
+        .empty-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 8px;
+            color: var(--green-400);
+        }
+
+        /* Growth Card */
+        .growth-card {
+            background: linear-gradient(135deg, var(--brand-900) 0%, var(--brand-800) 100%);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            color: var(--white);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .growth-bg-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 16px;
+            opacity: 0.1;
+            font-size: 100px;
+        }
+
+        .growth-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .growth-subtitle {
+            color: var(--brand-200);
+            font-size: 14px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .chart-container {
+            height: 160px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 16px;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--accent-400);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .growth-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--brand-200);
+            background: rgba(255, 255, 255, 0.1);
+            width: fit-content;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        /* Disputes View */
+        .disputes-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+            height: calc(100vh - 200px);
+        }
+
+        .disputes-list {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .search-box {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 10px;
+            color: var(--gray-400);
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--brand-500);
+        }
+
+        .disputes-scroll {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .dispute-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dispute-item:hover {
+            background: var(--gray-50);
+        }
+
+        .dispute-item.active {
+            background: var(--brand-50);
+            border-left: 4px solid var(--brand-600);
+        }
+
+        .dispute-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .dispute-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .dispute-status.open {
+            background: var(--red-100);
+            color: var(--red-600);
+        }
+
+        .dispute-status.resolved {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        .dispute-date {
+            font-size: 10px;
+            color: var(--gray-400);
+        }
+
+        .dispute-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dispute-reason {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Dispute Detail */
+        .dispute-detail {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .dispute-detail-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-100);
+            background: rgba(249, 250, 251, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .dispute-detail-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .dispute-detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .resolve-btn {
+            background: var(--green-600);
+            color: var(--white);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resolve-btn:hover {
+            background: var(--green-700);
+        }
+
+        .dispute-detail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #f1f5f9;
+        }
+
+        .complaint-box {
+            background: var(--red-50);
+            border: 1px solid var(--red-100);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .complaint-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #991b1b;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .complaint-text {
+            font-size: 14px;
+            color: #991b1b;
+        }
+
+        .chat-log-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-message.customer {
+            align-self: flex-start;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-top-left-radius: 0;
+        }
+
+        .chat-message.contractor {
+            align-self: flex-end;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-100);
+            border-top-right-radius: 0;
+        }
+
+        .chat-message-text {
+            color: var(--gray-800);
+        }
+
+        .chat-message-meta {
+            font-size: 10px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+
+        .chat-message.contractor .chat-message-meta {
+            color: #3b82f6;
+            text-align: right;
+        }
+
+        .dispute-actions {
+            padding: 16px;
+            background: var(--white);
+            border-top: 1px solid var(--gray-100);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--gray-50);
+        }
+
+        .action-btn.primary {
+            background: var(--brand-900);
+            border: none;
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--brand-800);
+        }
+
+        .empty-dispute {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--gray-400);
+        }
+
+        .empty-dispute-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            color: var(--gray-300);
+        }
+
+        /* Financials Tab */
+        .financials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .financial-card {
+            background: var(--brand-900);
+            color: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .financial-card.white {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 1px solid var(--gray-100);
+        }
+
+        .financial-bg-icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 16px;
+            opacity: 0.1;
+            font-size: 80px;
+        }
+
+        .financial-label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .financial-card .financial-label {
+            color: var(--brand-200);
+        }
+
+        .financial-card.white .financial-label {
+            color: var(--gray-500);
+        }
+
+        .financial-amount {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .batch-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .batch-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .financial-growth {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--green-600);
+            margin-top: 8px;
+        }
+
+        /* Payout Table */
+        .payout-table {
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .payout-table thead {
+            background: var(--gray-50);
+            color: var(--gray-500);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .payout-table th {
+            padding: 16px 24px;
+            font-weight: 600;
+        }
+
+        .payout-table tbody tr {
+            border-bottom: 1px solid var(--gray-50);
+            transition: background 0.2s ease;
+        }
+
+        .payout-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .payout-table td {
+            padding: 16px 24px;
+        }
+
+        .contractor-name-cell {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .balance-amount {
+            font-weight: 700;
+            color: var(--green-600);
+        }
+
+        .status-badge {
+            background: var(--green-100);
+            color: var(--green-700);
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .transfer-btn {
+            color: var(--brand-600);
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid #bfdbfe;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .transfer-btn:hover {
+            background: var(--brand-50);
+            border-color: var(--brand-600);
+        }
+
+        .export-btn {
+            color: var(--brand-600);
+            font-size: 14px;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .export-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Analytics Charts */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+        }
+
+        .chart-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--gray-100);
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        .chart-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .disputes-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 16px;
+            }
+
+            .admin-name {
+                display: none;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .financials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+        <div id="root"></div>
+
+        <!-- Load React, ReactDOM and Babel standalone to run TSX in the browser -->
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <script type="text/babel" data-presets="react,typescript">
+        // Inlined AdminDashboard (transpiled by Babel standalone)
+        const { useState, useMemo } = React;
+
+        function AdminDashboard() {
+            const [verifications, setVerifications] = useState(() => [
+                {
+                    id: 'c-001',
+                    name: 'Amit Constructions',
+                    businessId: 'GST-12345',
+                    location: 'Mumbai, MH',
+                    submittedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+                    docs: [
+                        { name: 'GST Certificate', verified: false },
+                        { name: 'Business Registration', verified: false },
+                    ],
+                    status: 'PENDING',
+                },
+                {
+                    id: 'c-002',
+                    name: 'Ravi Build Co.',
+                    businessId: 'GST-98765',
+                    location: 'Pune, MH',
+                    submittedAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+                    docs: [{ name: 'Aadhar', verified: true }],
+                    status: 'PENDING',
+                },
+            ]);
+
+            const [transactions] = useState(() => [
+                {
+                    id: 't-001',
+                    date: new Date().toISOString(),
+                    description: 'Project advance - Bathroom Renovation',
+                    amount: 15000,
+                    type: 'CREDIT',
+                    category: 'JOB_PAYMENT',
+                },
+                {
+                    id: 't-002',
+                    date: new Date().toISOString(),
+                    description: 'Commission Deduction',
+                    amount: 1020,
+                    type: 'DEBIT',
+                    category: 'COMMISSION',
+                },
+            ]);
+
+            const [payouts, setPayouts] = useState(() => [
+                {
+                    id: 'p-001',
+                    contractorId: 'c-001',
+                    contractorName: 'Amit Constructions',
+                    balance: 13980,
+                    requestedAt: new Date().toISOString(),
+                    status: 'PENDING',
+                },
+                {
+                    id: 'p-002',
+                    contractorId: 'c-002',
+                    contractorName: 'Ravi Build Co.',
+                    balance: 42000,
+                    requestedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+                    status: 'COMPLETED',
+                },
+            ]);
+
+            const [disputes, setDisputes] = useState(() => [
+                {
+                    id: 'd-001',
+                    title: 'Materials not delivered',
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+                    status: 'OPEN',
+                    reason: 'Contractor delayed supplier delivery',
+                    customerName: 'Suresh Patel',
+                    jobId: 'j-001',
+                },
+                {
+                    id: 'd-002',
+                    title: 'Quality dispute',
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+                    status: 'RESOLVED',
+                    reason: 'Minor finish issue - settled',
+                    customerName: 'Anita Desai',
+                    jobId: 'j-002',
+                },
+            ]);
+
+            const [selectedDisputeId, setSelectedDisputeId] = useState(null);
+            const [query, setQuery] = useState('');
+            const [activeNav, setActiveNav] = useState('overview');
+
+            const totalContractors = useMemo(() => verifications.length, [verifications]);
+            const pendingVerifications = useMemo(() => verifications.filter(v => v.status === 'PENDING').length, [verifications]);
+            const totalPayoutsPending = useMemo(() => payouts.filter(p => p.status === 'PENDING').length, [payouts]);
+            const totalEarnings = useMemo(() => transactions.reduce((s, t) => s + (t.type === 'CREDIT' ? t.amount : -t.amount), 0), [transactions]);
+
+            function approveVerification(id) {
+                setVerifications(prev => prev.map(v => (v.id === id ? { ...v, status: 'VERIFIED', docs: v.docs.map(d => ({ ...d, verified: true })) } : v)));
+            }
+
+            function rejectVerification(id) {
+                setVerifications(prev => prev.map(v => (v.id === id ? { ...v, status: 'REJECTED' } : v)));
+            }
+
+            function transferPayout(payoutId) {
+                setPayouts(prev => prev.map(p => (p.id === payoutId ? { ...p, status: 'COMPLETED' } : p)));
+            }
+
+            function resolveDispute(id) {
+                setDisputes(prev => prev.map(d => (d.id === id ? { ...d, status: 'RESOLVED' } : d)));
+            }
+
+            function filteredVerifications() {
+                if (!query.trim()) return verifications;
+                const q = query.toLowerCase();
+                return verifications.filter(v => v.name.toLowerCase().includes(q) || (v.businessId || '').toLowerCase().includes(q) || v.location.toLowerCase().includes(q));
+            }
+
+            const selectedDispute = useMemo(() => disputes.find(d => d.id === selectedDisputeId) || null, [disputes, selectedDisputeId]);
+
+            const formatDate = (iso) => {
+                try { return new Date(iso).toLocaleString(); } catch { return iso; }
+            };
+
+            return (
+                <div>
+                    <nav className="navbar">
+                        <div className="navbar-left" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div className="logo-icon">C</div>
+                            <div className="logo-text">Civi</div>
+                        </div>
+                        <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                            <span className="admin-name">System Administrator</span>
+                            <span className="badge-admin" style={{ background: 'var(--accent-400)', color: 'var(--brand-900)', padding: '6px 14px', borderRadius: 16, fontWeight: 700, textTransform: 'uppercase' }}>
+                                Admin
+                            </span>
+                            <div className="profile-avatar" style={{ width: 40, height: 40, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                S
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div className="dashboard-container">
+                        <aside className="sidebar" aria-label="Sidebar navigation">
+                            <div className="sidebar-header">
+                                <div className="sidebar-title">
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                        <span className="logo-icon" aria-hidden />
+                                        Civi Admin
+                                    </span>
+                                </div>
+                                <div className="sidebar-version">v1.0</div>
+                            </div>
+
+                            <nav className="sidebar-nav" aria-label="Admin sections">
+                                <button type="button" className={`nav-btn ${activeNav === 'overview' ? 'active' : ''}`} onClick={() => setActiveNav('overview')}>
+                                    <span className="nav-btn-content">Overview</span>
+                                    <span />
+                                </button>
+                                <button type="button" className={`nav-btn ${activeNav === 'verifications' ? 'active' : ''}`} onClick={() => setActiveNav('verifications')}>
+                                    <span className="nav-btn-content">Verifications</span>
+                                    <span className="nav-badge">{pendingVerifications}</span>
+                                </button>
+                                <button type="button" className={`nav-btn ${activeNav === 'disputes' ? 'active' : ''}`} onClick={() => setActiveNav('disputes')}>
+                                    <span className="nav-btn-content">Disputes</span>
+                                    <span />
+                                </button>
+                                <button type="button" className={`nav-btn ${activeNav === 'financials' ? 'active' : ''}`} onClick={() => setActiveNav('financials')}>
+                                    <span className="nav-btn-content">Financials</span>
+                                    <span className="nav-badge">{totalPayoutsPending}</span>
+                                </button>
+                            </nav>
+                        </aside>
+
+                        <main className="main-content" role="main">
+                            {activeNav === 'overview' && (
+                                <>
+                                    <div className="stats-grid">
+                                        <div className="stat-card">
+                                            <div className="stat-header">
+                                                <div>
+                                                    <div className="stat-label">Total Contractors</div>
+                                                    <div className="stat-value">{totalContractors}</div>
+                                                </div>
+                                                <div className="stat-icon blue" aria-hidden>
+                                                    🧾
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="stat-card">
+                                            <div className="stat-header">
+                                                <div>
+                                                    <div className="stat-label">Pending Verifications</div>
+                                                    <div className="stat-value">{pendingVerifications}</div>
+                                                </div>
+                                                <div className="stat-icon yellow" aria-hidden>
+                                                    ⚠️
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="stat-card">
+                                            <div className="stat-header">
+                                                <div>
+                                                    <div className="stat-label">Total Payouts Pending</div>
+                                                    <div className="stat-value">{totalPayoutsPending}</div>
+                                                </div>
+                                                <div className="stat-icon green" aria-hidden>
+                                                    💸
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="content-grid">
+                                        <section className="card">
+                                            <div className="card-header">
+                                                <div>
+                                                    <div className="card-title">Recent Verifications</div>
+                                                    <div className="card-subtitle">Review and approve contractor verification requests</div>
+                                                </div>
+                                                <div>
+                                                    <button className="approve-btn" type="button" onClick={() => setActiveNav('verifications')}>
+                                                        Manage
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="table-container">
+                                                <table aria-label="Recent verifications">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Contractor</th>
+                                                            <th>Location</th>
+                                                            <th>Submitted</th>
+                                                            <th>Docs</th>
+                                                            <th />
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {verifications.slice(0, 3).map(v => (
+                                                            <tr key={v.id}>
+                                                                <td>
+                                                                    <div className="contractor-name">{v.name}</div>
+                                                                    {v.businessId && <div className="contractor-id">{v.businessId}</div>}
+                                                                </td>
+                                                                <td>{v.location}</td>
+                                                                <td>{formatDate(v.submittedAt)}</td>
+                                                                <td>
+                                                                    <div className="doc-badges">
+                                                                        {v.docs.map((d, i) => (
+                                                                            <span key={d.name + i} className={`doc-badge ${d.verified ? 'verified' : 'missing'}`}>
+                                                                                {d.name}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                </td>
+                                                                <td style={{ textAlign: 'right' }}>
+                                                                    {v.status === 'PENDING' ? (
+                                                                        <>
+                                                                            <button className="approve-btn" type="button" onClick={() => approveVerification(v.id)}>
+                                                                                Approve
+                                                                            </button>
+                                                                            <button
+                                                                                style={{ marginLeft: 8 }}
+                                                                                className="action-btn secondary"
+                                                                                type="button"
+                                                                                onClick={() => rejectVerification(v.id)}
+                                                                            >
+                                                                                Reject
+                                                                            </button>
+                                                                        </>
+                                                                    ) : (
+                                                                        <span style={{ fontWeight: 700 }}>{v.status}</span>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </section>
+
+                                        <aside className="card">
+                                            <div className="card-header">
+                                                <div>
+                                                    <div className="card-title">Growth</div>
+                                                    <div className="card-subtitle">Key metrics and trends</div>
+                                                </div>
+                                                <div>
+                                                    <button className="export-btn" type="button">
+                                                        Export
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ padding: 24 }}>
+                                                <div style={{ marginBottom: 12, color: '#9ca3af', fontWeight: 700, fontSize: 12 }}>Monthly Revenue</div>
+                                                <div style={{ height: 160, borderRadius: 8, background: '#eef2ff', display: 'flex', alignItems: 'flex-end', padding: 8, gap: 8 }}>
+                                                    <div style={{ width: 16, height: 60, background: '#fbbf24', borderRadius: 4 }} />
+                                                    <div style={{ width: 16, height: 80, background: '#fbbf24', borderRadius: 4 }} />
+                                                    <div style={{ width: 16, height: 40, background: '#fbbf24', borderRadius: 4 }} />
+                                                    <div style={{ width: 16, height: 100, background: '#fbbf24', borderRadius: 4 }} />
+                                                </div>
+                                                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <div>
+                                                        <div style={{ fontWeight: 700, fontSize: 18 }}>₹{Math.max(0, Math.round(totalEarnings)).toLocaleString()}</div>
+                                                        <div style={{ color: '#bfdbfe', fontSize: 12 }}>Total project volume</div>
+                                                    </div>
+                                                    <div className="growth-badge" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: '#bfdbfe', background: 'rgba(255,255,255,0.1)', padding: 6, borderRadius: 8 }}>
+                                                        +12% YoY
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aside>
+                                    </div>
+                                </>
+                            )}
+
+                            {activeNav === 'verifications' && (
+                                <section className="card">
+                                    <div className="card-header">
+                                        <div>
+                                            <div className="card-title">Contractor Verifications</div>
+                                            <div className="card-subtitle">Manage verification documents and approvals</div>
+                                        </div>
+                                        <div />
+                                    </div>
+
+                                    <div className="search-box">
+                                        <div style={{ display: 'flex', gap: 12 }}>
+                                            <input className="search-input" placeholder="Search contractors, GST, location..." value={query} onChange={e => setQuery(e.target.value)} />
+                                            <div style={{ marginLeft: 'auto' }}>
+                                                <button className="action-btn primary" type="button" onClick={() => setQuery('')}>
+                                                    Clear
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="table-container">
+                                        <table aria-label="Verifications table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Contractor</th>
+                                                    <th>Location</th>
+                                                    <th>Submitted</th>
+                                                    <th>Docs</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {filteredVerifications().map(v => (
+                                                    <tr key={v.id}>
+                                                        <td>
+                                                            <div className="contractor-name">{v.name}</div>
+                                                            {v.businessId && <div className="contractor-id">{v.businessId}</div>}
+                                                        </td>
+                                                        <td>{v.location}</td>
+                                                        <td>{formatDate(v.submittedAt)}</td>
+                                                        <td>
+                                                            <div className="doc-badges">
+                                                                {v.docs.map((d, i) => (
+                                                                    <span key={`${v.id}-doc-${i}`} className={`doc-badge ${d.verified ? 'verified' : 'missing'}`}>
+                                                                        {d.name}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </td>
+                                                        <td style={{ textAlign: 'right' }}>
+                                                            {v.status === 'PENDING' ? (
+                                                                <>
+                                                                    <button className="approve-btn" type="button" onClick={() => approveVerification(v.id)}>
+                                                                        Approve
+                                                                    </button>
+                                                                    <button style={{ marginLeft: 8 }} className="action-btn secondary" type="button" onClick={() => rejectVerification(v.id)}>
+                                                                        Reject
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                <span style={{ fontWeight: 700 }}>{v.status}</span>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </section>
+                            )}
+
+                            {activeNav === 'disputes' && (
+                                <section className="card" style={{ paddingBottom: 0 }}>
+                                    <div className="card-header">
+                                        <div>
+                                            <div className="card-title">Disputes</div>
+                                            <div className="card-subtitle">Review and resolve customer disputes</div>
+                                        </div>
+                                        <div />
+                                    </div>
+
+                                    <div style={{ padding: 16 }}>
+                                        <div className="disputes-grid">
+                                            <div className="disputes-list">
+                                                <div className="search-box">
+                                                    <div style={{ display: 'flex', gap: 12 }}>
+                                                        <input className="search-input" placeholder="Search disputes..." value={query} onChange={e => setQuery(e.target.value)} />
+                                                        <div style={{ marginLeft: 'auto' }}>
+                                                            <button className="action-btn secondary" type="button" onClick={() => setQuery('')}>
+                                                                Clear
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="disputes-scroll" style={{ overflowY: 'auto', flex: 1 }}>
+                                                    {disputes.map(d => {
+                                                        const isActive = d.id === selectedDisputeId;
+                                                        return (
+                                                            <div key={d.id} className={`dispute-item ${isActive ? 'active' : ''}`} onClick={() => setSelectedDisputeId(d.id)} role="button" tabIndex={0}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                                                    <div>
+                                                                        <div className="dispute-title">{d.title}</div>
+                                                                        <div className="dispute-reason">{d.reason}</div>
+                                                                    </div>
+                                                                    <div style={{ textAlign: 'right' }}>
+                                                                        <div style={{ fontSize: 12, color: '#9ca3af' }}>{formatDate(d.createdAt)}</div>
+                                                                        <div style={{ marginTop: 6 }}>
+                                                                            <span className={`dispute-status ${d.status === 'OPEN' ? 'open' : 'resolved'}`}>{d.status}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+
+                                            <div className="dispute-detail">
+                                                <div className="dispute-detail-header">
+                                                    <div>
+                                                        <div className="dispute-detail-title">{selectedDispute ? selectedDispute.title : 'Select a dispute'}</div>
+                                                        <div className="dispute-detail-meta">{selectedDispute ? `${selectedDispute.customerName} • ${formatDate(selectedDispute.createdAt)}` : ''}</div>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                        <button
+                                                            className="action-btn secondary"
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (selectedDispute) {
+                                                                    resolveDispute(selectedDispute.id);
+                                                                }
+                                                            }}
+                                                            disabled={!selectedDispute || selectedDispute?.status === 'RESOLVED'}
+                                                        >
+                                                            Resolve
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="dispute-detail-content">
+                                                    {selectedDispute ? (
+                                                        <>
+                                                            <div className="complaint-box">
+                                                                <div className="complaint-title">Complaint</div>
+                                                                <div className="complaint-text">{selectedDispute.reason}</div>
+                                                            </div>
+
+                                                            <div>
+                                                                <h4 style={{ marginBottom: 8, fontWeight: 700 }}>Conversation / Case Notes</h4>
+                                                                <div style={{ padding: 12, background: 'white', borderRadius: 8 }}>
+                                                                    <p style={{ marginBottom: 8 }}>No conversation data available — add moderator notes here.</p>
+                                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                                        <button className="action-btn primary" type="button" onClick={() => selectedDispute && resolveDispute(selectedDispute.id)}>
+                                                                            Mark Resolved
+                                                                        </button>
+                                                                        <button className="action-btn secondary" type="button">
+                                                                            Escalate
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <div className="empty-dispute">
+                                                            <div className="empty-dispute-icon">💬</div>
+                                                            <div>No dispute selected</div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+
+                            {activeNav === 'financials' && (
+                                <section className="card">
+                                    <div className="card-header">
+                                        <div>
+                                            <div className="card-title">Financials & Payouts</div>
+                                            <div className="card-subtitle">Manage payouts and export reports</div>
+                                        </div>
+                                        <div />
+                                    </div>
+
+                                    <div style={{ padding: 24 }}>
+                                        <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontSize: 12, color: '#9ca3af', fontWeight: 700 }}>Summary</div>
+                                                <div style={{ fontSize: 20, fontWeight: 700 }}>₹{Math.round(totalEarnings).toLocaleString()}</div>
+                                            </div>
+                                            <div>
+                                                <button className="batch-btn" type="button">
+                                                    Batch Transfer
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ overflowX: 'auto' }}>
+                                            <table className="payout-table" aria-label="Payout requests">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Contractor</th>
+                                                        <th>Balance</th>
+                                                        <th>Requested</th>
+                                                        <th>Status</th>
+                                                        <th />
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {payouts.map(p => (
+                                                        <tr key={p.id}>
+                                                            <td>
+                                                                <div className="contractor-name-cell">{p.contractorName}</div>
+                                                                <div style={{ fontSize: 12, color: '#9ca3af' }}>{p.contractorId}</div>
+                                                            </td>
+                                                            <td>
+                                                                <div className="balance-amount">₹{p.balance.toLocaleString()}</div>
+                                                            </td>
+                                                            <td>{formatDate(p.requestedAt)}</td>
+                                                            <td>
+                                                                <span className="status-badge" style={{ background: p.status === 'COMPLETED' ? '#dcfce7' : '#fff7ed', color: p.status === 'COMPLETED' ? '#15803d' : '#92400e' }}>
+                                                                    {p.status}
+                                                                </span>
+                                                            </td>
+                                                            <td style={{ textAlign: 'right' }}>
+                                                                {p.status !== 'COMPLETED' && (
+                                                                    <button className="transfer-btn" type="button" onClick={() => transferPayout(p.id)}>
+                                                                        Transfer
+                                                                    </button>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(AdminDashboard));
+        </script>
+</body>
+</html>

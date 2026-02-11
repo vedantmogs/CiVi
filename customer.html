@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civi - Contractor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2e4d82 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .navbar-left-icon {
+            background: #ffd00b;
+            color: #1e3a8a;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .user-badge-label {
+            background: #ffd00b;
+            color: #1e3a8a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-container {
+            padding: 2rem;
+            background: #f9fafb;
+            min-height: calc(100vh - 70px);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .post-job-btn {
+            background: #ffd00b;
+            color: #1e3a8a;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 208, 11, 0.3);
+        }
+
+        .post-job-btn:hover {
+            background: #fff285;
+            transform: translateY(-2px);
+        }
+
+        .jobs-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid #cddbf0;
+        }
+
+        .job-card-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .job-category {
+            background: #e8eef9;
+            color: #1e3a8a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .job-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-hired {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-open {
+            background: #dbeafe;
+            color: #0c4a6e;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .job-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .job-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .job-card-footer {
+            padding: 1rem 1.5rem;
+            background: #f9fafb;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+        }
+
+        .location-icon {
+            color: #719cd2;
+        }
+
+        .quotes-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #1e3a8a;
+        }
+
+        .quote-avatars {
+            display: flex;
+            margin-right: 0.5rem;
+            gap: -0.5rem;
+        }
+
+        .quote-avatar {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            margin-left: -0.5rem;
+        }
+
+        .quote-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 1.5rem;
+            border: 2px dashed #e5e7eb;
+        }
+
+        .empty-state-icon {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 100%;
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            color: #d1d5db;
+        }
+
+        .empty-state-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-text {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #1e3a8a;
+        }
+
+        .detail-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .detail-main {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-header {
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-title {
+            flex: 1;
+        }
+
+        .detail-title h1 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .detail-budget {
+            text-align: right;
+        }
+
+        .detail-budget-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-budget-amount {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .detail-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: #f9fafb;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-tab {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #6b7280;
+        }
+
+        .detail-tab.active {
+            background: white;
+            color: #1e3a8a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .description-section h4 {
+            font-size: 0.875rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .description-box {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .quotes-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            padding: 0 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .quote-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .quote-item.accepted {
+            border-color: #dcfce7;
+            background: rgba(220, 252, 231, 0.3);
+            position: relative;
+        }
+
+        .quote-hired-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #16a34a;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.65rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 0 1.25rem 0 0.5rem;
+        }
+
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .quote-contractor {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quote-avatar-large {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: #e8eef9;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .quote-contractor-info h3 {
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .quote-contractor-info p {
+            font-size: 0.75rem;
+            color: #16a34a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .quote-amount {
+            text-align: right;
+        }
+
+        .quote-amount-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .quote-amount-duration {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .quote-description {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            border: 1px solid #e5e7eb;
+            font-style: italic;
+        }
+
+        .quote-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .quote-action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quote-decline-btn {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        .quote-decline-btn:hover {
+            color: #1f2937;
+            background: #f3f4f6;
+        }
+
+        .quote-hire-btn {
+            background: #1e3a8a;
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+        }
+
+        .quote-hire-btn:hover {
+            background: #2e4d82;
+        }
+
+        .no-quotes {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.25rem;
+            border: 2px dashed #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .chat-sidebar {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            position: sticky;
+            top: 24px;
+        }
+
+        .chat-header {
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chat-message {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.user {
+            background: #1e3a8a;
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .chat-message.contractor {
+            background: #f3f4f6;
+            color: #1f2937;
+            margin-right: 0.5rem;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .chat-input button {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: #2e4d82;
+        }
+
+        @media (max-width: 1024px) {
+            .detail-container {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-title-section {
+                flex-direction: column;
+            }
+
+            .detail-tabs {
+                flex-wrap: wrap;
+            }
+
+            .quote-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-left-icon">C</div>
+            <span>Civi</span>
+        </div>
+        <div class="navbar-right">
+            <div class="user-badge">
+                <span>Rajesh Kumar</span>
+                <span class="user-badge-label">Contractor</span>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- List View -->
+        <div id="listView" style="display: block;">
+            <div class="header-section">
+                <div class="header-title">
+                    <h2>My Projects</h2>
+                    <p>Manage your ongoing construction requests</p>
+                </div>
+                <button class="post-job-btn" onclick="toggleCreateView()">
+                    <i class="fas fa-plus"></i>
+                    Post New Job
+                </button>
+            </div>
+
+            <div class="jobs-grid" id="jobsGrid">
+                <!-- Sample Job Cards -->
+                <div class="job-card" onclick="viewJobDetail(0)">
+                    <div class="job-card-content">
+                        <div class="job-card-header">
+                            <span class="job-category">Civil Work</span>
+                            <span class="job-status status-hired">Hired</span>
+                        </div>
+                        <h3 class="job-title">Bathroom Renovation</h3>
+                        <p class="job-description">Need full tile replacement and waterproofing for 50sqft bathroom.</p>
+                    </div>
+                    <div class="job-card-footer">
+                        <span class="location-info">
+                            <i class="fas fa-map-pin location-icon"></i>
+                            400001
+                        </span>
+                        <span class="quotes-info">
+                            <div class="quote-avatars">
+                                <div class="quote-avatar">👷</div>
+                            </div>
+                            1 Quote
+                        </span>
+                    </div>
+                </div>
+
+                <div class="job-card" onclick="viewJobDetail(1)">
+                    <div class="job-card-content">
+                        <div class="job-card-header">
+                            <span class="job-category">Electrical</span>
+                            <span class="job-status status-open">Open</span>
+                        </div>
+                        <h3 class="job-title">Whole House Wiring</h3>
+                        <p class="job-description">Replacing old wiring for 2BHK apartment.</p>
+                    </div>
+                    <div class="job-card-footer">
+                        <span class="location-info">
+                            <i class="fas fa-map-pin location-icon"></i>
+                            400001
+                        </span>
+                        <span class="quotes-info">
+                            <div class="quote-avatars"></div>
+                            0 Quotes
+                        </span>
+                    </div>
+                </div>
+
+                <div class="job-card" onclick="viewJobDetail(2)">
+                    <div class="job-card-content">
+                        <div class="job-card-header">
+                            <span class="job-category">Plumbing</span>
+                            <span class="job-status status-open">Open</span>
+                        </div>
+                        <h3 class="job-title">Kitchen Pipe Leakage</h3>
+                        <p class="job-description">Urgent repair needed for under-sink leakage.</p>
+                    </div>
+                    <div class="job-card-footer">
+                        <span class="location-info">
+                            <i class="fas fa-map-pin location-icon"></i>
+                            400001
+                        </span>
+                        <span class="quotes-info">
+                            <div class="quote-avatars"></div>
+                            0 Quotes
+                        </span>
+                    </div>
+                </div>
+
+                <div class="job-card" onclick="viewJobDetail(3)">
+                    <div class="job-card-content">
+                        <div class="job-card-header">
+                            <span class="job-category">Civil Work</span>
+                            <span class="job-status status-open">Open</span>
+                        </div>
+                        <h3 class="job-title">Terrace Waterproofing</h3>
+                        <p class="job-description">1200 sqft terrace needs Dr. Fixit coating before monsoons.</p>
+                    </div>
+                    <div class="job-card-footer">
+                        <span class="location-info">
+                            <i class="fas fa-map-pin location-icon"></i>
+                            400001
+                        </span>
+                        <span class="quotes-info">
+                            <div class="quote-avatars"></div>
+                            0 Quotes
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="detailView" style="display: none;">
+            <button class="back-btn" onclick="toggleListView()">
+                <i class="fas fa-arrow-left"></i>
+                Back to jobs
+            </button>
+
+            <div class="detail-container">
+                <div class="detail-main">
+                    <div class="detail-header">
+                        <div class="detail-title-section">
+                            <div class="detail-title">
+                                <h1 id="detailTitle">Bathroom Renovation</h1>
+                                <div class="detail-badges">
+                                    <span class="job-category">Civil Work</span>
+                                    <span class="job-status status-hired">Hired</span>
+                                </div>
+                            </div>
+                            <div class="detail-budget">
+                                <div class="detail-budget-label">Estimated Budget</div>
+                                <div class="detail-budget-amount">₹50,000 - ₹75,000</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-tabs">
+                            <button class="detail-tab active" onclick="switchDetailTab('overview')">Overview & Quotes</button>
+                            <button class="detail-tab" onclick="switchDetailTab('milestones')">Milestones & Payments</button>
+                        </div>
+                    </div>
+
+                    <!-- Overview Tab -->
+                    <div id="overviewTab">
+                        <div class="description-section">
+                            <h4>Description</h4>
+                            <div class="description-box" id="jobDescription">
+                                Need full tile replacement and waterproofing for 50sqft bathroom.
+                            </div>
+                        </div>
+
+                        <h3 class="quotes-title">Received Quotations</h3>
+                        <div id="quotesContainer">
+                            <div class="quote-item accepted">
+                                <div class="quote-hired-badge">Hired</div>
+                                <div class="quote-header">
+                                    <div class="quote-contractor">
+                                        <div class="quote-avatar-large">R</div>
+                                        <div class="quote-contractor-info">
+                                            <h3>Rajesh Kumar</h3>
+                                            <p><i class="fas fa-check-circle"></i> Verified Pro</p>
+                                        </div>
+                                    </div>
+                                    <div class="quote-amount">
+                                        <div class="quote-amount-value">₹65,000</div>
+                                        <div class="quote-amount-duration">7 Days Duration</div>
+                                    </div>
+                                </div>
+                                <div class="quote-description">
+                                    "I have 15+ years experience in bathroom renovations. Will use premium tiles and waterproofing materials. Can start immediately."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Milestones Tab -->
+                    <div id="milestonesTab" style="display: none;">
+                        <div style="background: #fffeed; border: 1px solid #fff285; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem; display: flex; gap: 0.75rem;">
+                            <i class="fas fa-exclamation-circle" style="color: #ca8a04; flex-shrink: 0; margin-top: 0.25rem;"></i>
+                            <div>
+                                <p style="font-weight: bold; color: #854d0e; font-size: 0.875rem;">Secure Payment Protection</p>
+                                <p style="font-size: 0.75rem; color: #854d0e; margin-top: 0.25rem;">Funds are held in escrow. Only release payment when you are satisfied with the completed milestone.</p>
+                            </div>
+                        </div>
+
+                        <div id="milestonesContainer">
+                            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 2rem; height: 2rem; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem;">✓</div>
+                                    <div>
+                                        <p style="font-weight: bold; color: #1f2937;">Foundation & Layout</p>
+                                        <p style="font-size: 0.875rem; color: #6b7280;">₹22,000</p>
+                                    </div>
+                                </div>
+                                <span style="display: flex; align-items: center; gap: 0.25rem; color: #16a34a; font-weight: bold; font-size: 0.875rem; background: #dcfce7; padding: 0.375rem 0.75rem; border-radius: 0.5rem; border: 1px solid #bbf7d0;">
+                                    <i class="fas fa-check-circle"></i> Paid
+                                </span>
+                            </div>
+
+                            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 2rem; height: 2rem; border-radius: 50%; background: #e5e7eb; color: #6b7280; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem;">2</div>
+                                    <div>
+                                        <p style="font-weight: bold; color: #1f2937;">Wall Tiling & Waterproofing</p>
+                                        <p style="font-size: 0.875rem; color: #6b7280;">₹28,000</p>
+                                    </div>
+                                </div>
+                                <button style="background: #1e3a8a; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; font-weight: bold; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2); animation: pulse 2s infinite;">
+                                    <i class="fas fa-dollar-sign"></i> Release Payment
+                                </button>
+                            </div>
+
+                            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 2rem; height: 2rem; border-radius: 50%; background: #f3f4f6; color: #9ca3af; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem;">3</div>
+                                    <div>
+                                        <p style="font-weight: bold; color: #1f2937;">Final Finishing & Cleanup</p>
+                                        <p style="font-size: 0.875rem; color: #6b7280;">₹15,000</p>
+                                    </div>
+                                </div>
+                                <span style="display: flex; align-items: center; gap: 0.25rem; color: #6b7280; font-weight: bold; font-size: 0.875rem; background: #f3f4f6; padding: 0.375rem 0.75rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                                    <i class="fas fa-lock"></i> Locked
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Sidebar -->
+                <div class="chat-sidebar">
+                    <div class="chat-header">
+                        <i class="fas fa-comments"></i> Chat with Contractor
+                    </div>
+                    <div class="chat-messages">
+                        <div class="chat-message contractor">Thanks for hiring me! I'll start the work tomorrow.</div>
+                        <div class="chat-message user">Great! Please send me daily updates.</div>
+                        <div class="chat-message contractor">Will do! I've already sourced the materials.</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Type a message...">
+                        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const jobsData = [
+            {
+                id: 0,
+                title: "Bathroom Renovation",
+                category: "Civil Work",
+                status: "hired",
+                description: "Need full tile replacement and waterproofing for 50sqft bathroom.",
+                location: "400001",
+                budget: "₹50,000 - ₹75,000",
+                quotes: 1,
+                quotes_detail: [
+                    {
+                        name: "Rajesh Kumar",
+                        amount: "₹65,000",
+                        duration: "7 Days Duration",
+                        description: "I have 15+ years experience in bathroom renovations. Will use premium tiles and waterproofing materials. Can start immediately.",
+                        verified: true,
+                        hired: true
+                    }
+                ]
+            },
+            {
+                id: 1,
+                title: "Whole House Wiring",
+                category: "Electrical",
+                status: "open",
+                description: "Replacing old wiring for 2BHK apartment.",
+                location: "400001",
+                budget: "₹30,000 - ₹50,000",
+                quotes: 0,
+                quotes_detail: []
+            },
+            {
+                id: 2,
+                title: "Kitchen Pipe Leakage",
+                category: "Plumbing",
+                status: "open",
+                description: "Urgent repair needed for under-sink leakage.",
+                location: "400001",
+                budget: "₹5,000 - ₹15,000",
+                quotes: 0,
+                quotes_detail: []
+            },
+            {
+                id: 3,
+                title: "Terrace Waterproofing",
+                category: "Civil Work",
+                status: "open",
+                description: "1200 sqft terrace needs Dr. Fixit coating before monsoons.",
+                location: "400001",
+                budget: "₹25,000 - ₹40,000",
+                quotes: 0,
+                quotes_detail: []
+            }
+        ];
+
+        function toggleCreateView() {
+            alert("Create New Job form would be shown here!");
+        }
+
+        function toggleListView() {
+            document.getElementById('listView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
+        }
+
+        function viewJobDetail(jobId) {
+            const job = jobsData[jobId];
+            document.getElementById('detailTitle').textContent = job.title;
+            document.getElementById('jobDescription').textContent = job.description;
+            document.getElementById('listView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
+        }
+
+        function switchDetailTab(tab) {
+            const overviewTab = document.getElementById('overviewTab');
+            const milestonesTab = document.getElementById('milestonesTab');
+            const tabs = document.querySelectorAll('.detail-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'overview') {
+                overviewTab.style.display = 'block';
+                milestonesTab.style.display = 'none';
+                tabs[0].classList.add('active');
+            } else {
+                overviewTab.style.display = 'none';
+                milestonesTab.style.display = 'block';
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function sendMessage() {
+            alert("Message sent!");
+        }
+
+        function handleLogout() {
+            alert("Logging out...");
+            window.location.href = 'main.html';
+        }
+    </script>
+</body>
+</html>
